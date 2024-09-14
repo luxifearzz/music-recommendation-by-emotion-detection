@@ -1,0 +1,3 @@
+backend/my_flask_api/myenv/
+backend/my_flask_api/uploads/*.png
+backend/my_flask_api/uploads/*.jpg

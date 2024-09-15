@@ -3,42 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emotion Analyzer</title>
+    <title>Music Emotion Analyzer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #uploadForm {
-            margin-bottom: 20px;
-        }
-        #result {
-            margin-top: 20px;
+            padding: 20px;
         }
         img {
-            max-width: 200px;
-            height: auto;
+            max-width: 300px;
+            margin-top: 10px;
         }
         audio {
-            display: block;
+            display: none;
+            margin-top: 10px;
+        }
+        .links {
             margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Emotion Analyzer</h1>
+    <h1>Music Emotion Analyzer</h1>
     <form id="uploadForm">
-        <label for="fileInput">Upload Image:</label>
-        <input type="file" id="fileInput" accept="image/*" required>
-        <button type="submit">Analyze</button>
+        <label for="fileInput">Upload an Image:</label>
+        <input type="file" id="fileInput" name="file" accept="image/*" required><br><br>
+
+        <label for="languageSelect">Select Language:</label>
+        <select id="languageSelect" name="language">
+            <option value="english">English</option>
+            <option value="thai">Thai</option>
+        </select><br><br>
+
+        <button type="submit">Analyze Emotion</button>
     </form>
-    <div id="result">
-        <p id="emotion"></p>
-        <img id="coverImage" src="" alt="Cover Image" style="display:none;">
-        <audio id="song" controls style="display:none;">
-            Your browser does not support the audio element.
-        </audio>
+
+    <h2>Results</h2>
+    <p id="emotion"></p>
+    <p id="description"></p>
+
+    <img id="coverImage" src="" alt="Cover Image" style="display: none;">
+    <audio id="song" controls style="display: none;">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="links">
+        <a id="youtubeLink" href="#" target="_blank" style="display: none;">Listen on YouTube</a><br>
+        <a id="spotifyLink" href="#" target="_blank" style="display: none;">Listen on Spotify</a>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

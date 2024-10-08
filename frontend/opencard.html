@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="card.css">
+    <title>Open My Card</title>
+</head>
+
+<body>
+    <div class="main-page">
+        <div class="containerHead">
+            <div class="containerHeadF">
+                <h1 class="face-says" style="display: none;">FaceSays</h1>
+            </div>
+            <div class="card" id="card">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="triangle"></div>
+                        <h1>Open My Card</h1>
+                    </div>
+                    <div class="card-back">
+                        <div class="card-back-content">
+                            <div class="details-page">
+                                <div id="refresh-btn" class="refresh-button">↻</div>
+                                <div class="details-content">
+                                    <div class="image-box">
+                                        <img id="coverImage"
+                                            src="https://i.pinimg.com/236x/e9/5b/ed/e95bedb685af9b0686b109b96c98f7bf.jpg"
+                                            alt="Profile" class="profile-image">
+                                    </div>
+                                    <div id="lyrics" class="music-lyrics">"เธอคือทุกสิ่ง ในความจริงในความฝัน
+                                        คือทุกอย่างเหมือนใจต้องการ เธอเป็นนิทาน ที่ฉันอ่าน ก่อนหลับตาและนอนฝัน"</div>
+                                </div>
+                                <div class="music-info">
+                                    <audio id="song" controls>
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                    <div id="music-name" class="music-name">TEST</div>
+                                </div>
+                                <div class="social-links">
+                                    <a id="spotifyLink" href="https://open.spotify.com/" alt="spotify" target="_blank">
+                                        <div class="social-item">
+                                            <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Green.png"
+                                                class="social-icon"><span>Spotify</span>
+                                        </div>
+                                    </a>
+                                    <a id="youtubeLink" href="https://www.youtube.com/" alt="youtube" target="_blank">
+                                        <div class="social-item">
+                                            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"
+                                                class="social-icon"><span>YouTube</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <hr>
+                                <div class="rating">
+                                    <p>How closely does this card reflect <br> your feelings right now?</p>
+                                    <div class="star-rating">
+                                        <span class="star" data-value="1">&#9733;</span> <!-- //&#9733; = โค้ดดาว -->
+                                        <span class="star" data-value="2">&#9733;</span>
+                                        <span class="star" data-value="3">&#9733;</span>
+                                        <span class="star" data-value="4">&#9733;</span>
+                                        <span class="star" data-value="5">&#9733;</span>
+                                    </div>
+                                    <script src="starRating.js"></script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let flippedOnce = false;
+
+        document.getElementById('card').addEventListener('click', function () {
+            if (!flippedOnce) {  // Check if the card hasn't been flipped yet
+                this.classList.toggle('flipped');
+                flippedOnce = true;  // Set to true after the first flip
+
+                const faceSays = document.querySelector('.face-says');
+                faceSays.style.display = 'none';
+                setTimeout(() => {
+                    faceSays.style.display = 'block';
+                }, 500);
+            }
+        });
+
+        function showData() {
+            const data = JSON.parse(window.sessionStorage.getItem('response'))
+
+            document.getElementById('coverImage').src = data.cover_url
+            document.getElementById('lyrics').textContent = data.description
+            document.getElementById('song').src = data.song_url
+            document.getElementById('music-name').textContent = data.name
+            document.getElementById('spotifyLink').href = data.links.spotify
+            document.getElementById('youtubeLink').href = data.links.youtube
+        }
+
+        showData()
+
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            const data = JSON.parse(window.sessionStorage.getItem('response'));
+
+            if (data) {
+                // เรียก API /new-song โดยส่งข้อมูลที่จำเป็น (id, emotion, language)
+                fetch('http://127.0.0.1:5000/new-song', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: data.id,
+                        emotion: data.emotion,
+                        language: data.language
+                    })
+                })
+                    .then(response => response.json())
+                    .then(newSongData => {
+                        if (newSongData.error) {
+                            console.error(newSongData.error);
+                        } else {
+                            window.sessionStorage.setItem('response', JSON.stringify(newSongData));
+                            showData();  // เรียก showData() ที่นี่เพื่อแสดงข้อมูลใหม่ทันที
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching new song:", error);
+                    });
+            } else {
+                console.error("No data found in sessionStorage.");
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>

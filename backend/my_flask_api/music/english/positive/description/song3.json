@@ -1,5 +1,9 @@
 {
+    "id": 3,
+    "name": "song3",
     "description": "song3 eng positive",
     "youtube": "https://youtube.com/song3_eng_positive",
-    "spotify": "https://spotify.com/song3_eng_positive"
+    "spotify": "https://spotify.com/song3_eng_positive",
+    "rating": 0.0,
+    "total_ratings": 0
 }

@@ -1,0 +1,28 @@
+<!-- page2.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChooseSongType</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="white">
+    <h2> Which one do you want to choose ? </h2>
+    <div class="button-container">
+        <a href="faceDetection.html" class="button" onclick="handleClick('Button 1')">Thai Song</a>
+        <a href="faceDetection.html" class="button" onclick="handleClick('Button 2')">English Song</a>
+    </div>
+    <script>
+        function handleClick(btn) {
+            let language = ''
+            if (btn == 'Button 1') {
+                language = 'thai'
+            } else {
+                language = 'english'
+            }
+            window.sessionStorage.setItem('language', language)
+        }
+    </script>
+</body>
+</html>

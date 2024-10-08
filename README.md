@@ -4,7 +4,7 @@ how to run
 - เปิด terminal ที่ project root folder
 - พิมพ์คำสั่ง
 ```bash
-cd backend/my_flash_api
+cd backend/my_flask_api
 py app.py
 ```
 

@@ -3,7 +3,7 @@ const stars = document.querySelectorAll('.star');
 
 // วนลูปเพื่อเพิ่ม event listener ให้กับแต่ละดาว
 stars.forEach((star) => {
-    star.addEventListener('click', () => {
+    star.addEventListener('hover', () => {
         // ลบ class 'selected' จากทุกดาว
         stars.forEach((s) => s.classList.remove('selected'));
         

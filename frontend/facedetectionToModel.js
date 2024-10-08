@@ -27,6 +27,7 @@ predictBtn.style.padding = "10px 20px";
 predictBtn.style.fontSize = "16px"; 
 predictBtn.style.cursor = "pointer"; 
 predictBtn.style.marginTop = "5px"; 
+predictBtn.style.zIndex = 1;
 videoContainer.appendChild(predictBtn); 
 
 // show result
@@ -158,8 +159,12 @@ function dataURLToBlob(dataURL) {
     return new Blob([uint8Array], { type: mimeString });
 }
 
+console.log(">>>>>> predict btn is : ", predictBtn); // ตรวจสอบว่าปุ่มถูกสร้างหรือไม่
+
 // Event handler for predict button
 predictBtn.addEventListener('click', () => {
+    console.log(">>>>>>>>>-- predict btn pressed!! --");
+    
     if (detectedFaceImage) {
         // Convert Data URL to Blob (image file)
         const faceImageBlob = dataURLToBlob(detectedFaceImage);
@@ -218,5 +223,5 @@ video.addEventListener('play', () => {
     displaySize = { width, height };
     faceapi.matchDimensions(canvas, displaySize);
 
-    setInterval(detect, 2000); 
+    setInterval(detect, 500); 
 });

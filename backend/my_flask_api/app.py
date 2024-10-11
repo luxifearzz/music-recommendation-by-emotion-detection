@@ -155,6 +155,11 @@ def rate_song():
     if not song_id or not new_rating or not language or not emotion:
         return jsonify({'error': 'Missing required fields: id, rating, language, emotion are required'}), 400
 
+    try:
+        new_rating = int(new_rating)
+    except:
+        return jsonify({'error': 'rating is not number'}), 400
+
     description_path = os.path.join(MUSIC_FOLDER, language, emotion, 'description')
     description_file = next((f for f in os.listdir(description_path) if f"song{song_id}.json" in f), None)
 
@@ -169,6 +174,7 @@ def rate_song():
     total_ratings = song_details.get('total_ratings', 0)
 
     new_total_ratings = total_ratings + 1
+    print("xxxxxxxxxxxxxxxxxxxxxxxxx\n", type(current_rating), type(total_ratings), type(new_rating), type(new_total_ratings))
     updated_rating = ((current_rating * total_ratings) + new_rating) / new_total_ratings
 
     song_details['rating'] = updated_rating

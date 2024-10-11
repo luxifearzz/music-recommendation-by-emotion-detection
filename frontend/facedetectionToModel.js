@@ -75,9 +75,6 @@ async function detect() {
         const box = resizedDetections[0].box; 
         captureFace(video, box);
         predictBtn.style.display = "inline-block"; 
-    } else {
-        // predictBtn.style.display = "none"; // hidden button if not found face but it's hard to use
-        // resultDiv.innerText = ""; // clear result ( comment makes result still shown )
     }
 }
 
@@ -98,53 +95,6 @@ function captureFace(video, box) {
     detectedFaceImage = faceCanvas.toDataURL('image/png');
 }
 
-// manage button for predict
-// predictBtn.addEventListener('click', () => {
-//     if (detectedFaceImage) {
-//         // send pic for predict
-//         fetch('/predict-emotion', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ image: detectedFaceImage })
-//         })
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.success) {
-//                 resultDiv.innerText = `You look ${data.emotion}`;
-
-//                 // create link Next >>
-//                 const nextLink = document.createElement("a");
-//                 nextLink.href = "opencard.html"; 
-//                 nextLink.innerText = "Next >>";
-//                 nextLink.style.display = "block"; 
-//                 nextLink.style.marginTop = "10px";
-//                 nextLink.style.textAlign = "center"; 
-//                 nextLink.style.color = "#567D8E"; 
-
-//                 resultDiv.appendChild(nextLink);
-//                 resultDiv.style.display = "block"; 
-
-//             } else {
-//                 resultDiv.innerText = `Error: ${data.message}`;
-//             }
-//             resultDiv.style.display = "block"; 
-//         })
-//         .catch(error => {
-//             console.error("Error:", error);
-//             resultDiv.innerText = "Error occurred while analyzing the emotion.";
-//             resultDiv.style.display = "block"; 
-//         });
-//     } else {
-//         alert("ไม่มีใบหน้าที่ตรวจพบเพื่อจับภาพ");
-//     }
-// });
-
-// displaying the result for testing 
-// The frontend display will be based on this 
-// I assume the code above will work like this, but it is not connected with the model and backend yet.
-
 // Convert dataURL to a Blob
 function dataURLToBlob(dataURL) {
     const byteString = atob(dataURL.split(',')[1]); // Split dataURL to base64 string
@@ -159,12 +109,8 @@ function dataURLToBlob(dataURL) {
     return new Blob([uint8Array], { type: mimeString });
 }
 
-console.log(">>>>>> predict btn is : ", predictBtn); // ตรวจสอบว่าปุ่มถูกสร้างหรือไม่
-
 // Event handler for predict button
-predictBtn.addEventListener('click', () => {
-    console.log(">>>>>>>>>-- predict btn pressed!! --");
-    
+predictBtn.addEventListener('click', () => {    
     if (detectedFaceImage) {
         // Convert Data URL to Blob (image file)
         const faceImageBlob = dataURLToBlob(detectedFaceImage);
@@ -181,8 +127,6 @@ predictBtn.addEventListener('click', () => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log("API Response:", data); // ดูว่า response จาก API เป็นอะไรบ้าง
-        
             if (data.error) {
                 resultDiv.innerText = `Error: ${data.error}`;
                 resultDiv.style.display = "block";

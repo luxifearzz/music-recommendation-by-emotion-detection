@@ -1,5 +1,3 @@
-console.log("conn js success");
-
 // เลือกดาวทั้งหมด
 const stars = document.querySelectorAll('.star');
 let isRated = false;
@@ -30,7 +28,6 @@ function rate(val) {
                     oldResponse.rating = data.new_rating
                     oldResponse.total_ratings = data.total_ratings
                     window.sessionStorage.setItem('response', JSON.stringify(oldResponse))
-                    console.log(oldResponse);
                 }
             })
             .catch(error => {

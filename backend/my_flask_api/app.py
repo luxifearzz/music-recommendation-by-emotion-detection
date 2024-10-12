@@ -17,16 +17,6 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def prepare_image_for_model(filepath):
-    # เตรียมข้อมูลรูปภาพเพื่อส่งเข้าโมเดล
-    # นี่เป็นตัวอย่างการเตรียมข้อมูล เช่น การแปลงรูปภาพเป็น array หรือการจัดการรูปภาพ
-    # คุณสามารถแทนที่โค้ดนี้ด้วยการใช้งานโมเดลที่เหมาะสม
-    image_data = {
-        'filename': filepath,
-        'description': 'Data prepared for model'
-    }
-    return image_data
-
 def random_emotion():
     return random.choice(['positive', 'neutral', 'negative'])
 
@@ -45,46 +35,35 @@ def analyze_emotion():
         file.save(filepath)
 
         language = request.form.get('language', 'english').lower()
-
-        # เตรียมข้อมูลสำหรับโมเดล
-        image_data = prepare_image_for_model(filepath)
-
-        # ใช้ random_emotion แทนในระหว่างการพัฒนา
         emotion = random_emotion()
 
-        music_path = os.path.join(MUSIC_FOLDER, language, emotion, 'mp3')
-        cover_path = os.path.join(MUSIC_FOLDER, language, emotion, 'png')
-        description_path = os.path.join(MUSIC_FOLDER, language, emotion, 'description')
-
-        if not os.path.exists(music_path) or not os.listdir(music_path):
+        emotion_folder = os.path.join(MUSIC_FOLDER, language, emotion)
+        if not os.path.exists(emotion_folder) or not os.listdir(emotion_folder):
             return jsonify({'error': 'No music available for this emotion'}), 500
-        if not os.path.exists(cover_path):
-            return jsonify({'error': 'No cover images available for this emotion'}), 500
 
-        selected_song = random.choice(os.listdir(music_path))
-        song_name = os.path.splitext(selected_song)[0]
-        cover_image = f"{song_name}.png"
-        cover_image_path = os.path.join(cover_path, cover_image)
+        available_songs = [song for song in os.listdir(emotion_folder) if os.path.isdir(os.path.join(emotion_folder, song))]
+        selected_song = random.choice(available_songs)
 
-        if not os.path.exists(cover_image_path):
-            return jsonify({'error': f'Cover image for {song_name} not found'}), 500
+        song_folder = os.path.join(emotion_folder, selected_song)
+        song_file_path = os.path.join(song_folder, f'{selected_song}.mp3')
+        cover_file_path = os.path.join(song_folder, f'{selected_song}.png')
+        description_file_path = os.path.join(song_folder, f'{selected_song}.json')
 
-        description_file_path = os.path.join(description_path, f"{song_name}.json")
-        if not os.path.exists(description_file_path):
-            return jsonify({'error': 'Description file not found'}), 500
+        if not all(os.path.exists(path) for path in [song_file_path, cover_file_path, description_file_path]):
+            return jsonify({'error': 'One or more files are missing for the selected song'}), 500
 
         with open(description_file_path, 'r') as f:
             song_details = json.load(f)
 
-        song_url = url_for('get_file', folder='mp3', filename=selected_song, emotion=emotion, language=language, _external=True)
-        cover_url = url_for('get_file', folder='png', filename=cover_image, emotion=emotion, language=language, _external=True)
+        song_url = url_for('get_file', language=language, emotion=emotion, folder=selected_song, filename=f'{selected_song}.mp3', _external=True)
+        cover_url = url_for('get_file', language=language, emotion=emotion, folder=selected_song, filename=f'{selected_song}.png', _external=True)
 
         return jsonify({
-            'id': song_details.get('id', ''),
+            'id': selected_song,
             'emotion': emotion,
             'song_url': song_url,
             'cover_url': cover_url,
-            'name': song_details.get('name', song_name),
+            'name': song_details.get('name', selected_song),
             'description': song_details.get('description', ''),
             'links': {
                 'youtube': song_details.get('youtube', ''),
@@ -105,32 +84,33 @@ def new_song():
 
     emotion = data['emotion']
     language = data['language']
-    music_path = os.path.join(MUSIC_FOLDER, language, emotion, 'mp3')
-    description_path = os.path.join(MUSIC_FOLDER, language, emotion, 'description')
+    emotion_folder = os.path.join(MUSIC_FOLDER, language, emotion)
 
-    if not os.path.exists(music_path) or not os.listdir(music_path):
+    if not os.path.exists(emotion_folder) or not os.listdir(emotion_folder):
         return jsonify({'error': 'No music available for this emotion and language'}), 500
 
-    available_songs = [song for song in os.listdir(music_path) if song != f"song{data['id']}.mp3"]
+    available_songs = [song for song in os.listdir(emotion_folder) if os.path.isdir(os.path.join(emotion_folder, song)) and song != data['id']]
     if not available_songs:
         return jsonify({'error': 'No new songs available for this emotion and language'}), 500
 
     selected_song = random.choice(available_songs)
-    song_name = os.path.splitext(selected_song)[0]
+    song_folder = os.path.join(emotion_folder, selected_song)
+    song_file_path = os.path.join(song_folder, f'{selected_song}.mp3')
+    cover_file_path = os.path.join(song_folder, f'{selected_song}.png')
+    description_file_path = os.path.join(song_folder, f'{selected_song}.json')
 
-    description_file_path = os.path.join(description_path, f"{song_name}.json")
-    if not os.path.exists(description_file_path):
-        return jsonify({'error': 'Description file not found'}), 500
+    if not all(os.path.exists(path) for path in [song_file_path, cover_file_path, description_file_path]):
+        return jsonify({'error': 'One or more files are missing for the selected song'}), 500
 
     with open(description_file_path, 'r') as f:
         song_details = json.load(f)
 
-    song_url = url_for('get_file', folder='mp3', filename=selected_song, emotion=emotion, language=language, _external=True)
-    cover_url = url_for('get_file', folder='png', filename=f"{song_name}.png", emotion=emotion, language=language, _external=True)
+    song_url = url_for('get_file', language=language, emotion=emotion, folder=selected_song, filename=f'{selected_song}.mp3', _external=True)
+    cover_url = url_for('get_file', language=language, emotion=emotion, folder=selected_song, filename=f'{selected_song}.png', _external=True)
 
     return jsonify({
-        'id': song_name.split('song')[-1],
-        'name': song_details.get('name', song_name),
+        'id': selected_song,
+        'name': song_details.get('name', selected_song),
         'description': song_details.get('description', ''),
         'links': {
             'youtube': song_details.get('youtube', ''),
@@ -157,16 +137,15 @@ def rate_song():
 
     try:
         new_rating = int(new_rating)
-    except:
-        return jsonify({'error': 'rating is not number'}), 400
+    except ValueError:
+        return jsonify({'error': 'Rating must be a number'}), 400
 
-    description_path = os.path.join(MUSIC_FOLDER, language, emotion, 'description')
-    description_file = next((f for f in os.listdir(description_path) if f"song{song_id}.json" in f), None)
+    song_folder = os.path.join(MUSIC_FOLDER, language, emotion, song_id)
+    description_file_path = os.path.join(song_folder, f'{song_id}.json')
 
-    if not description_file:
+    if not os.path.exists(description_file_path):
         return jsonify({'error': 'Song description file not found'}), 404
 
-    description_file_path = os.path.join(description_path, description_file)
     with open(description_file_path, 'r') as f:
         song_details = json.load(f)
 
@@ -174,7 +153,6 @@ def rate_song():
     total_ratings = song_details.get('total_ratings', 0)
 
     new_total_ratings = total_ratings + 1
-    print("xxxxxxxxxxxxxxxxxxxxxxxxx\n", type(current_rating), type(total_ratings), type(new_rating), type(new_total_ratings))
     updated_rating = ((current_rating * total_ratings) + new_rating) / new_total_ratings
 
     song_details['rating'] = updated_rating
@@ -191,11 +169,10 @@ def rate_song():
 
 @app.route('/file/<language>/<emotion>/<folder>/<filename>', methods=['GET'])
 def get_file(language, emotion, folder, filename):
-    folder_path = os.path.join(MUSIC_FOLDER, language, emotion, folder)
-    file_path = os.path.join(folder_path, filename)
+    file_path = os.path.join(MUSIC_FOLDER, language, emotion, folder, filename)
 
     if os.path.exists(file_path):
-        mimetype = 'audio/mpeg' if folder == 'mp3' else 'image/png'
+        mimetype = 'audio/mpeg' if filename.endswith('.mp3') else 'image/png'
         return send_file(file_path, as_attachment=True, download_name=filename, mimetype=mimetype)
 
     return jsonify({'error': 'File not found'}), 404

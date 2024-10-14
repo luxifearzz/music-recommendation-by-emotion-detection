@@ -28,6 +28,10 @@ git clone https://github.com/luxifearzz/music-recommendation-by-emotion-detectio
 - https://drive.google.com/file/d/1Z5fJ6hz38DyWrN9mg817sWInloWUh-Zr/view?usp=sharing
 - paste in folder ```backend/my_flask_api/models/``` (same place as ```.paste_model.h5_here```)
 
+### prepare file
+run
+```py tools.py```
+
 ### run backend server
 
 open terminal at root folder of project and run this command

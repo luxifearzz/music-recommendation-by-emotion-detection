@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from PIL import Image
 import numpy as np
 
 def apply():
@@ -9,13 +10,18 @@ def apply():
 
     # โหลดโมเดล
     model = load_model('models/model.h5')
-    # model = load_model('models/model_weights.weights.h5')
-    # model = load_model('models/emotion_model_pretrained.h5')
 
     # เตรียมภาพสำหรับการพยากรณ์
     img_path = 'uploads/detected-face.png'
+    
+    # โหลดภาพและปรับเป็นขาวดำ
+    img = Image.open(img_path).convert('L')
     # ปรับขนาดภาพตามที่โมเดลต้องการ
-    img = load_img(img_path, target_size=(IMG_SIZE, IMG_SIZE))
+    img = img.resize((IMG_SIZE, IMG_SIZE))
+    
+    # แปลงภาพขาวดำเป็น RGB
+    img = img.convert('RGB')
+    
     # ทำ Normalization ให้อยู่ระหว่าง [0, 1]
     img_array = img_to_array(img) / 255.0
     # เพิ่มมิติให้สอดคล้องกับ input ของโมเดล

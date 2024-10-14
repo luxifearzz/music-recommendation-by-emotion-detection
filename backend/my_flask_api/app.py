@@ -34,7 +34,7 @@ def analyze_emotion():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
-        language = request.form.get('language', 'english').lower()
+        language = request.form.get('language', 'non-thai').lower()
         emotion = random_emotion()
 
         emotion_folder = os.path.join(MUSIC_FOLDER, language, emotion)

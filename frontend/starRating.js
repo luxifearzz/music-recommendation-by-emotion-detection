@@ -53,13 +53,14 @@ stars.forEach((star) => {
                 stars[i].classList.add('selected'); // เพิ่ม class ให้ดาวที่อยู่ก่อนหน้า
             }
 
-            rate(value)
-            isRated = true
+            rate(value);
+            isRated = true;
         }
     });
 });
 
 document.getElementById('refresh-btn').addEventListener('click', () => {
+    // reset selected stars
     stars.forEach((s) => s.classList.remove('selected'));
-    isRated = false
-})
+    isRated = false;
+});

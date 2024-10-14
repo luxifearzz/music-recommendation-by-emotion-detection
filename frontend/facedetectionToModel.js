@@ -118,7 +118,7 @@ predictBtn.addEventListener('click', () => {
         // Create FormData and append image and language
         const formData = new FormData();
         formData.append('file', faceImageBlob, 'detected-face.png'); // File name is 'detected-face.png'
-        formData.append('language', 'english');  // หรือจะเปลี่ยนเป็น 'thai'
+        formData.append('language', 'non-thai');  // หรือจะเปลี่ยนเป็น 'thai'
 
         // Send the FormData to the API
         fetch('http://127.0.0.1:5000/analyze', {

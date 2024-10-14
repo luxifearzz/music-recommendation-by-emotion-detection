@@ -11,7 +11,7 @@
     <h2> Which one do you want to choose ? </h2>
     <div class="button-container">
         <a href="faceDetection.html" class="button" onclick="handleClick('Button 1')">Thai Song</a>
-        <a href="faceDetection.html" class="button" onclick="handleClick('Button 2')">English Song</a>
+        <a href="faceDetection.html" class="button" onclick="handleClick('Button 2')">Non-Thai Song</a>
     </div>
     <script>
         function handleClick(btn) {
@@ -19,7 +19,7 @@
             if (btn == 'Button 1') {
                 language = 'thai'
             } else {
-                language = 'english'
+                language = 'non-thai'
             }
             window.sessionStorage.setItem('language', language)
         }

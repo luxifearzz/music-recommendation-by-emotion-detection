@@ -234,15 +234,22 @@ h2{
 .play-button {
     position: absolute;
     display: flex;
-    width: 20px;
-    height: 20px;
+    left: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
     font-size: 11px;
     background-color: #567C8D;
     color: #ffffff;
     justify-content: center;
     align-items: center;
-    border-radius: 50%;
+    border: none;
+    outline: none;
     /* border: 10px solid #2F4157;  */
+}
+
+#song {
+    display: none;
 }
 
 .music-name {

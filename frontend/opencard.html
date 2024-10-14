@@ -34,6 +34,7 @@
                                         คือทุกอย่างเหมือนใจต้องการ เธอเป็นนิทาน ที่ฉันอ่าน ก่อนหลับตาและนอนฝัน"</div>
                                 </div>
                                 <div class="music-info">
+                                    <button id="playPauseButton" class="play-button">&#9658;</button>
                                     <audio id="song" controls>
                                         Your browser does not support the audio element.
                                     </audio>
@@ -73,6 +74,8 @@
     </div>
 
     <script src="starRating.js"></script>
+    <script src="audioPlayer.js"></script>
+    <script src="refresh.js"></script>
     <script>
 
         let flippedOnce = false;
@@ -87,52 +90,6 @@
                 setTimeout(() => {
                     faceSays.style.display = 'block';
                 }, 500);
-            }
-        });
-
-        function showData() {
-            const data = JSON.parse(window.sessionStorage.getItem('response'))
-
-            document.getElementById('coverImage').src = data.cover_url
-            document.getElementById('lyrics').textContent = data.description
-            document.getElementById('song').src = data.song_url
-            document.getElementById('music-name').textContent = data.name
-            document.getElementById('spotifyLink').href = data.links.spotify
-            document.getElementById('youtubeLink').href = data.links.youtube
-        }
-
-        showData()
-
-        document.getElementById('refresh-btn').addEventListener('click', () => {
-            const data = JSON.parse(window.sessionStorage.getItem('response'));
-
-            if (data) {
-                // เรียก API /new-song โดยส่งข้อมูลที่จำเป็น (id, emotion, language)
-                fetch('http://127.0.0.1:5000/new-song', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: data.id,
-                        emotion: data.emotion,
-                        language: data.language
-                    })
-                })
-                    .then(response => response.json())
-                    .then(newSongData => {
-                        if (newSongData.error) {
-                            console.error(newSongData.error);
-                        } else {
-                            window.sessionStorage.setItem('response', JSON.stringify(newSongData));
-                            showData();  // เรียก showData() ที่นี่เพื่อแสดงข้อมูลใหม่ทันที
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error fetching new song:", error);
-                    });
-            } else {
-                console.error("No data found in sessionStorage.");
             }
         });
     </script>

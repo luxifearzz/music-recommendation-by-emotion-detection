@@ -30,7 +30,9 @@ git clone https://github.com/luxifearzz/music-recommendation-by-emotion-detectio
 
 ### prepare file
 run
-```py tools.py```
+```bash
+py tools.py
+```
 
 ### run backend server
 

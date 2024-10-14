@@ -1,6 +1,10 @@
 backend/my_flask_api/myenv/
 backend/my_flask_api/uploads/*.png
 backend/my_flask_api/uploads/*.jpg
+backend/my_flask_api/music/thai/
+backend/my_flask_api/music/non-thai/
+backend/my_flask_api/models/*.h5
+backend/my_flask_api/models/*.pkl
+__pycache__/
 
-tools.py
 test.py

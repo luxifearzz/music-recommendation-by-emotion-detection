@@ -4,6 +4,7 @@ import json
 from flask import Flask, request, jsonify, send_file, url_for
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
+from applyModel import apply
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +21,10 @@ def allowed_file(filename):
 def random_emotion():
     return random.choice(['positive', 'neutral', 'negative'])
 
+def apply_model():
+    return apply()
+    # return random _emotion()
+
 @app.route('/analyze', methods=['POST'])
 def analyze_emotion():
     if 'file' not in request.files:
@@ -35,7 +40,7 @@ def analyze_emotion():
         file.save(filepath)
 
         language = request.form.get('language', 'non-thai').lower()
-        emotion = random_emotion()
+        emotion = apply_model()
 
         emotion_folder = os.path.join(MUSIC_FOLDER, language, emotion)
         if not os.path.exists(emotion_folder) or not os.listdir(emotion_folder):

@@ -57,7 +57,7 @@ def analyze_emotion():
         if not all(os.path.exists(path) for path in [song_file_path, cover_file_path, description_file_path]):
             return jsonify({'error': 'One or more files are missing for the selected song'}), 500
 
-        with open(description_file_path, 'r') as f:
+        with open(description_file_path, 'r', encoding='utf-8') as f:
             song_details = json.load(f)
 
         song_url = url_for('get_file', language=language, emotion=emotion, folder=selected_song, filename=f'{selected_song}.mp3', _external=True)
@@ -107,7 +107,7 @@ def new_song():
     if not all(os.path.exists(path) for path in [song_file_path, cover_file_path, description_file_path]):
         return jsonify({'error': 'One or more files are missing for the selected song'}), 500
 
-    with open(description_file_path, 'r') as f:
+    with open(description_file_path, 'r', encoding='utf-8') as f:
         song_details = json.load(f)
 
     song_url = url_for('get_file', language=language, emotion=emotion, folder=selected_song, filename=f'{selected_song}.mp3', _external=True)
@@ -151,7 +151,7 @@ def rate_song():
     if not os.path.exists(description_file_path):
         return jsonify({'error': 'Song description file not found'}), 404
 
-    with open(description_file_path, 'r') as f:
+    with open(description_file_path, 'r', encoding='utf-8') as f:
         song_details = json.load(f)
 
     current_rating = song_details.get('rating', 0)
@@ -163,7 +163,7 @@ def rate_song():
     song_details['rating'] = updated_rating
     song_details['total_ratings'] = new_total_ratings
 
-    with open(description_file_path, 'w') as f:
+    with open(description_file_path, 'w', encoding='utf-8') as f:
         json.dump(song_details, f, indent=4)
 
     return jsonify({

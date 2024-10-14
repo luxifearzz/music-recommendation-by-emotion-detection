@@ -111,6 +111,7 @@ function dataURLToBlob(dataURL) {
 
 // Event handler for predict button
 predictBtn.addEventListener('click', () => {    
+    console.log("facesays ....");
     if (detectedFaceImage) {
         // Convert Data URL to Blob (image file)
         const faceImageBlob = dataURLToBlob(detectedFaceImage);

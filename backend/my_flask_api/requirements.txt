@@ -1,5 +1,5 @@
-flask==*
-flask_cors==*
-tensorflow==*
-Pillow==*
+flask
+flask_cors
+tensorflow
+Pillow
 numpy<2
